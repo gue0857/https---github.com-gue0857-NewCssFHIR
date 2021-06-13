@@ -9,13 +9,11 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin 2 - Login</title>
+    <title>正念課程 - 學習平台登入網頁</title>
 
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
@@ -39,26 +37,22 @@
                             <div class="col-lg-6">
                                 <div class="p-5">
                                     <div class="text-center">
-                                        <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
+                                        <h1 class="h4 text-gray-900 mb-4">正念課程<br>學習平台登入網頁</h1>
                                     </div>
                                     <form class="user">
                                         <div class="form-group">
-                                            <input type="email" class="form-control form-control-user"
-                                                id="exampleInputEmail" aria-describedby="emailHelp"
-                                                placeholder="Enter Email Address...">
+                                            <input type="email" class="form-control form-control-user" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Enter Account...">
                                         </div>
                                         <div class="form-group">
-                                            <input type="password" class="form-control form-control-user"
-                                                id="exampleInputPassword" placeholder="Password">
+                                            <input type="password" class="form-control form-control-user" id="exampleInputPassword" placeholder="Password" onkeyup="SHA256PWD.value = sha256(this.value);">
                                         </div>
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox small">
                                                 <input type="checkbox" class="custom-control-input" id="customCheck">
-                                                <label class="custom-control-label" for="customCheck">Remember
-                                                    Me</label>
+                                                <label class="custom-control-label" for="customCheck">Remember Me</label>
                                             </div>
                                         </div>
-                                        <a href="index.html" class="btn btn-primary btn-user btn-block">
+                                        <a class="btn btn-primary btn-user btn-block" onclick="getData()">
                                             Login
                                         </a>
                                         <hr>
@@ -69,12 +63,22 @@
                                             <i class="fab fa-facebook-f fa-fw"></i> Login with Facebook
                                         </a>
                                     </form>
+                                    <!-- 密碼雜湊值 -->
+                                    <input type="hidden" id="SHA256PWD">
                                     <hr>
-                                    <div class="text-center">
+
+                                    <!-- 忘記密碼頁面 -->
+                                    <!-- <div class="text-center">
                                         <a class="small" href="forgot-password.html">Forgot Password?</a>
-                                    </div>
+                                    </div> -->
+
                                     <div class="text-center">
                                         <a class="small" href="register.html">Create an Account!</a>
+                                    </div>
+
+                                    <!-- 錯誤聯絡資訊 -->
+                                    <div class="text-center small">
+                                        無法登入或忘記密碼請聯絡慈大醫資蔡昀容學姊<br>電話：09xxxx xxxx<br>郵件：107316152@gms.tcu.edu.tw
                                     </div>
                                 </div>
                             </div>
@@ -88,9 +92,57 @@
 
     </div>
 
+    <script>
+        let UserID;
+
+        function checkUsername(res) {
+            let password = document.getElementById('exampleInputPassword').value;
+            let encPassword = document.getElementById('SHA256PWD').value;
+
+            if (res.total == 0) alert('帳號不存在!');
+            else {
+                var retPersonID = res.entry[0].resource.id;
+                var retPassword = res.entry[0].resource.identifier[1].value;
+                var retName = res.entry[0].resource.name[0].text;
+                //CHECK patient ID res.total
+                //Kan:check json hasOwnProperty [patient] 
+                if (res.entry[0].resource.hasOwnProperty('link'))
+                    globalPatientID = res.entry[0].resource.link[0].target.reference; //patient ID
+                else
+                    globalPatientID = '-1';
+                //Kan end
+            }
+
+            if (res.total == 1 && encPassword != retPassword) alert('Wrong password!');
+            else if (res.total == 1 && encPassword == retPassword) {
+                //Kan: if globalPatientID is -1, means no [patient] resource
+                var queryParam = '';
+                if (globalPatientID != '-1')
+                    queryParam = 'patientID=' + globalPatientID + '&name=' + encodeURIComponent(retName) + '&personID=' + retPersonID;
+                else
+                    queryParam = 'name=' + encodeURIComponent(retName) + '&personID=' + retPersonID;
+                //Kan end
+
+                location.replace("index.html?" + queryParam, "_blank");
+            }
+        }
+
+        function getData() {
+            if (checkRequiredField(2)) {
+                UserID = document.getElementById('exampleInputEmail').value;
+                let urlStr = FHIRserver + 'Person?identifier=UserID|' + UserID;
+                HTTPGetData(urlStr, "loginVerify");
+            }
+        }
+    </script>
+
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- TeacherData JavaScript-->
+    <script src="T_js/sha256.js"></script>
+    <script src="T_js/setting.js"></script>
 
     <!-- Core plugin JavaScript-->
     <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
