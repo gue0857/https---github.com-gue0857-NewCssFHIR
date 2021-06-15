@@ -296,9 +296,9 @@ function createTable() {
     var row, noIndex = 1,
         videoName;
     for (var index0 = 0; index0 <= iOrganization; index0++) { //check total organization
-        table.innerHTML += '<tr><th bgcolor="#ebebe0" colspan="2">Organization Name: ' + arrOrganization[index0] + '<br>My Course List</th></tr>';
+        table.innerHTML += '<tr><th  colspan="2">Organization Name: ' + arrOrganization[index0] + '<br>My Course List</th></tr>';
         for (var index1 = 0; index1 < iSchedule; index1++) { //divide per schedule (per mata pelajaran)
-            table.innerHTML += '<tr><td colspan="3">課程名稱: ' + arrSchedule[index1][0] + '<br>教授: ' + arrSchedule[index1][1] + '<br>課程期間: ' + arrSchedule[index1][2] + ' 至 ' + arrSchedule[index1][3] + '<br><a href="' + arrSchedule[index1][4] + '" target="_blank" style="color: blue;">問卷 URL</a></td></tr>';
+            table.innerHTML += '<tr><td colspan="3">課程名稱: ' + arrSchedule[index1][0] + '<br>教授: ' + arrSchedule[index1][1] + '<br>課程期間: ' + arrSchedule[index1][2] + ' 至 ' + arrSchedule[index1][3] + '<br><a href="' + arrSchedule[index1][4] + '" target="_blank" >問卷 URL</a></td></tr>';
             table.innerHTML += '<tr><th>No.</th><th>Video</th></tr>';
             var totSlot = arrSchedule[index1][5];
             for (var index2 = 0; index2 < totSlot; index2 += 5) { //per Slot
