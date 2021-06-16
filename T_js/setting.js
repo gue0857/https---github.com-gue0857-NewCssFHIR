@@ -1,7 +1,7 @@
 //Declare variable
-let FHIRserver = 'http://hapi.fhir.org/baseR4/';
+//let FHIRserver = 'http://hapi.fhir.org/baseR4/';
 //'http://hapi.fhir.org/baseR4/';
-// let FHIRserver= 'http://203.64.84.213:8080/fhir/';
+let FHIRserver = 'http://203.64.84.213:8080/fhir/';
 let globalPatientID, globalName, globalPersonID;
 let index = 0,
     iOrganization = -1,
