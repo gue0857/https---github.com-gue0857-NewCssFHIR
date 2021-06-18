@@ -13,9 +13,7 @@
 
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
@@ -37,33 +35,19 @@
                                 <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
                             </div>
                             <form class="user">
-                                <div class="form-group row">
-                                    <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <input type="text" class="form-control form-control-user" id="exampleFirstName"
-                                            placeholder="First Name">
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <input type="text" class="form-control form-control-user" id="exampleLastName"
-                                            placeholder="Last Name">
-                                    </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control form-control-user" id="pName" placeholder="Name">
                                 </div>
                                 <div class="form-group">
-                                    <input type="email" class="form-control form-control-user" id="exampleInputEmail"
-                                        placeholder="Email Address">
+                                    <input type="email" class="form-control form-control-user" id="exampleInputEmail" placeholder="Email Address">
                                 </div>
-                                <div class="form-group row">
-                                    <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <input type="password" class="form-control form-control-user"
-                                            id="exampleInputPassword" placeholder="Password">
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <input type="password" class="form-control form-control-user"
-                                            id="exampleRepeatPassword" placeholder="Repeat Password">
-                                    </div>
+                                <div class="form-group">
+                                    <input type="password" class="form-control form-control-user" id="exampleInputPassword" placeholder="Password">
                                 </div>
-                                <a href="login.html" class="btn btn-primary btn-user btn-block">
+                                <a class="btn btn-primary btn-user btn-block" onclick="getData()">
                                     Register Account
                                 </a>
+                                <input type="hidden" id="SHA256PWD">
                                 <hr>
                                 <a href="index.html" class="btn btn-google btn-user btn-block">
                                     <i class="fab fa-google fa-fw"></i> Register with Google
@@ -86,6 +70,40 @@
         </div>
 
     </div>
+
+    <script>
+        let userID;
+
+        function checkUsername(ret) {
+            let role = "Patient",
+                roleID = "2138344";
+            let name = document.getElementById('pName').value;
+            let encPassword = document.getElementById('SHA256PWD').value;
+            initialize();
+            if (ret.total > 0) alert('該帳號已存在！請使用其他帳號來註冊!');
+            else {
+                personJSONobj.identifier[0].value = userID;
+                personJSONobj.identifier[1].value = encPassword;
+                personJSONobj.name[0].text = name;
+                personJSONobj.telecom[0].value = userID;
+                personJSONobj = JSON.stringify(personJSONobj);
+                HTTPPostData(FHIRserver + "/Person", personJSONobj);
+                alert("新增帳號之後，需等1～2分鐘才可以登入唷！");
+                location.replace("login.html");
+            }
+        }
+
+        function getData() {
+            if (checkRequiredField(3)) {
+                userID = document.getElementById('exampleInputEmail').value;
+                let urlStr = FHIRserver + 'Person?identifier=UserID|' + userID;
+                HTTPGetData(urlStr, "CheckPersonUserID");
+            }
+        }
+    </script>
+
+    <script src="T_js/sha256.js"></script>
+    <script src="T_js/setting.js"></script>
 
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
